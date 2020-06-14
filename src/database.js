@@ -85,8 +85,16 @@ var db_config = {
             throw err;                                  // server variable configures this)
         }
     });
+
+
   }
   
   handleDisconnect();
 
+  setInterval(function () {
+    mysqlConnection.query('SELECT 1 + 1 AS solution', function (err, results) {
+        if(err) console.log('err',err);
+        console.log('Works bro ',results);
+        });
+  }, 2000);
 module.exports = mysqlConnection
