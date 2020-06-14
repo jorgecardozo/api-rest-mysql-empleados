@@ -10,7 +10,7 @@ Try connecting using node after you do so.
 If that doesn't work, try it without @'localhost' part.
 */
 
-const mysqlConnection = mysql.createConnection({
+//const mysqlConnection = mysql.createConnection({
     /*host: 'localhost',
     user: 'root',
     password: 'root',
@@ -18,18 +18,18 @@ const mysqlConnection = mysql.createConnection({
     insecureAuth : true,
     ports:'3306',
     multipleStatements: true*/
-    host: 'us-cdbr-east-05.cleardb.net',
-    user: 'b3e94009ceb36b',
-    password: '2dc3dd72',
-    database: 'heroku_690813288323c1e',
-    insecureAuth : true,
-    ports:'3306',
-    multipleStatements: true
-});
+   // host: 'us-cdbr-east-05.cleardb.net',
+   // user: 'b3e94009ceb36b',
+   //// password: '2dc3dd72',
+   // database: 'heroku_690813288323c1e',
+   // insecureAuth : true,
+   // ports:'3306',
+   // multipleStatements: true
+//});
 
 //mysql://b3e94009ceb36b:2dc3dd72@us-cdbr-east-05.cleardb.net/heroku_690813288323c1e?reconnect=true
 
-mysqlConnection.connect(function(err){
+/*mysqlConnection.connect(function(err){
     if(err){
         console.log("Error: ",err);
         return;
@@ -37,6 +37,47 @@ mysqlConnection.connect(function(err){
     else{
         console.log('DataBase is conect');
     }
-});
+});*/
+
+/*Esto es para Solucionar el problema de 
+ * throw er; // Unhandled 'error' event
+ * 2020-06-14T17:32:46.402261+00:00 app[web.1]: ^
+ * Error: Connection lost: The server closed the connection.
+*/ 
+
+var db_config = {
+    host: 'us-cdbr-east-05.cleardb.net',
+    user: 'b3e94009ceb36b',
+    password: '2dc3dd72',
+    database: 'heroku_690813288323c1e',
+    insecureAuth : true,
+    ports:'3306',
+    multipleStatements: true
+  };
+  
+  var mysqlConnection;
+  
+  function handleDisconnect() {
+    mysqlConnection = mysql.createConnection(db_config); // Recreate the connection, since
+                                                        // the old one cannot be reused.
+  
+    mysqlConnection.connect(function(err) {              // The server is either down
+      if(err) {                                     // or restarting (takes a while sometimes).
+        console.log('error when connecting to db:', err);
+        setTimeout(handleDisconnect, 2000); // We introduce a delay before attempting to reconnect,
+      }                                     // to avoid a hot loop, and to allow our node script to
+    });                                     // process asynchronous requests in the meantime.
+                                            // If you're also serving http, display a 503 error.
+    mysqlConnection.on('error', function(err) {
+        console.log('db error', err);
+        if(err.code === 'PROTOCOL_CONNECTION_LOST') { // Connection to the MySQL server is usually
+            handleDisconnect();                         // lost due to either server restart, or a
+        } else {                                      // connnection idle timeout (the wait_timeout
+            throw err;                                  // server variable configures this)
+        }
+    });
+  }
+  
+  handleDisconnect();
 
 module.exports = mysqlConnection
