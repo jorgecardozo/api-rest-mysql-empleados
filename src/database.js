@@ -46,10 +46,17 @@ If that doesn't work, try it without @'localhost' part.
 */ 
 
 var db_config = {
-    host: 'us-cdbr-east-05.cleardb.net',
+    /*host: 'us-cdbr-east-05.cleardb.net',
     user: 'b3e94009ceb36b',
     password: '2dc3dd72',
     database: 'heroku_690813288323c1e',
+    insecureAuth : true,
+    ports:'3306',
+    multipleStatements: true
+    /*host: 'localhost',*/
+    user: 'root',
+    password: 'root',
+    database: 'company',
     insecureAuth : true,
     ports:'3306',
     multipleStatements: true
