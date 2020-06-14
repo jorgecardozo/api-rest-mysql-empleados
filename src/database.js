@@ -64,7 +64,8 @@ var db_config = {
     mysqlConnection.connect(function(err) {              // The server is either down
       if(err) {                                     // or restarting (takes a while sometimes).
         console.log('Error cuando se intenta conectar a la DB:', err);
-        setTimeout(handleDisconnect, 2000); // We introduce a delay before attempting to reconnect,
+        handleDisconnect();
+        //setTimeout(handleDisconnect, 2000); // We introduce a delay before attempting to reconnect,
       }else{
         console.log('Conexion SUCCESS to DB');
       }                                     // to avoid a hot loop, and to allow our node script to
@@ -78,7 +79,7 @@ var db_config = {
             throw err;                                  // server variable configures this)
         }*/
 
-        if(err.fatal) { // Connection to the MySQL server is usually
+        if(err.fatal || err) { // Connection to the MySQL server is usually
             handleDisconnect();                         // lost due to either server restart, or a
         } else {                                      // connnection idle timeout (the wait_timeout
             throw err;                                  // server variable configures this)
