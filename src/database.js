@@ -65,6 +65,7 @@ var db_config = {
       if(err) {                                     // or restarting (takes a while sometimes).
         console.log('Error cuando se intenta conectar a la DB:', err);
         //handleDisconnect();
+        mysqlConnection.destroy();
         setTimeout(handleDisconnect, 2000); // We introduce a delay before attempting to reconnect,
       }else{
         console.log('Conexion SUCCESS to DB');
@@ -79,7 +80,8 @@ var db_config = {
             throw err;                                  // server variable configures this)
         }*/
 
-        if(err.fatal || err) { // Connection to the MySQL server is usually
+        if( (err.code === 'PROTOCOL_CONNECTION_LOST') || (err.code === 'PROTOCOL_CONNECTION_LOST') || err.fatal || err ) { // Connection to the MySQL server is usually
+            mysqlConnection.destroy();
             handleDisconnect();                         // lost due to either server restart, or a
         } else {                                      // connnection idle timeout (the wait_timeout
             throw err;                                  // server variable configures this)
@@ -91,7 +93,7 @@ var db_config = {
   
   handleDisconnect();
 
-  setTimeout(handleDisconnect, 2000);
+  //setTimeout(handleDisconnect, 2000);
 
   //ESTO ES PARA NO PERDER LA CONEXION EN PROD
   /*setInterval(function () {
@@ -100,4 +102,5 @@ var db_config = {
         console.log('Works bro ',results);
         });
   }, 2000);*/
+
 module.exports = mysqlConnection
