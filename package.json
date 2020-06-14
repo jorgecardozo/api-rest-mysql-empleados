@@ -4,7 +4,8 @@
   "description": "API REST con Nosejs",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon src/index.js"
+    "dev": "nodemon src/index.js",
+    "start": "node ."
   },
   "repository": {
     "type": "git",
