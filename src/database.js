@@ -91,6 +91,8 @@ var db_config = {
   
   handleDisconnect();
 
+  setTimeout(handleDisconnect, 2000);
+
   //ESTO ES PARA NO PERDER LA CONEXION EN PROD
   /*setInterval(function () {
     mysqlConnection.query('SELECT 1 + 1 AS solution', function (err, results) {
