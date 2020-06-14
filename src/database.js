@@ -64,8 +64,8 @@ var db_config = {
     mysqlConnection.connect(function(err) {              // The server is either down
       if(err) {                                     // or restarting (takes a while sometimes).
         console.log('Error cuando se intenta conectar a la DB:', err);
-        handleDisconnect();
-        //setTimeout(handleDisconnect, 2000); // We introduce a delay before attempting to reconnect,
+        //handleDisconnect();
+        setTimeout(handleDisconnect, 2000); // We introduce a delay before attempting to reconnect,
       }else{
         console.log('Conexion SUCCESS to DB');
       }                                     // to avoid a hot loop, and to allow our node script to
@@ -91,10 +91,11 @@ var db_config = {
   
   handleDisconnect();
 
-  setInterval(function () {
+  //ESTO ES PARA NO PERDER LA CONEXION EN PROD
+  /*setInterval(function () {
     mysqlConnection.query('SELECT 1 + 1 AS solution', function (err, results) {
         if(err) console.log('err',err);
         console.log('Works bro ',results);
         });
-  }, 2000);
+  }, 2000);*/
 module.exports = mysqlConnection
